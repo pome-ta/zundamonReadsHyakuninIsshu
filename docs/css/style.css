@@ -1,0 +1,27 @@
+@charset "utf-8";
+@import url('./bootstrap-reboot.css');
+/*@import url('./styleChecker.css');*/
+
+html {
+  width: 100%;
+  /*height: 100%;*/
+  scrollbar-gutter: stable;
+}
+html:has(dialog:modal) {
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN',
+    'Hiragino Sans', Meiryo, sans-serif;
+  /* font-feature-settings: 'palt' 1; */
+  font-feature-settings: 'pwid' 1;
+  /* font-feature-settings: 'pkna' 1; */
+  /* letter-spacing: 0.03rem; */
+}
+
+body {
+  max-width: 360px;
+  /*height: 100%;*/
+  margin: auto;
+}
