@@ -1,3 +1,3 @@
 # zundamonReadsHyakuninIsshu
 
-[VOICEVOXsandbox](https://pome-ta.github.io/zundamonReadsHyakuninIsshu/)
+[ずんだもんがよむ百人一首なのだ](https://pome-ta.github.io/zundamonReadsHyakuninIsshu/)

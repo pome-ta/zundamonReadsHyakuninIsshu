@@ -11,3 +11,5 @@
 [kuma0223/MDParser: Markdown/HTMLパーサ](https://github.com/kuma0223/MDParser)
 
 全体的に`var` を書き換えつつ、スタイル調整しやすいようにできるといいね
+
+ガバッとだけ書き換えただけで、あまり内容を読めていない。。。
