@@ -26,7 +26,7 @@ console.log(htmlMD);
 
 const divWrap = document.createElement('div');
 divWrap.innerHTML = htmlMD;
-document.body.appendChild(divWrap);
+// document.body.appendChild(divWrap);
 
 /**
  * DOM
