@@ -4,8 +4,8 @@ export class MDParser {
     this.ImageRoot = ''; //イメージパスのルート指定
     this.EnablePreview = true; //previewによるHTML直接記述
 
-    let MDParserObject = this;
-    let me = this;
+    const MDParserObject = this;
+    const me = this;
     let input = '';
     let inputs;
     let pointer;
@@ -15,10 +15,10 @@ export class MDParser {
       inputs = input.split(/\r?\n/);
       pointer = 0;
 
-      let buf = new HtmlBuilder();
+      const buf = new HtmlBuilder();
 
       while (true) {
-        let str = NextLine();
+        const str = NextLine();
         if (str == null) {
           break;
         }
@@ -42,16 +42,16 @@ export class MDParser {
         }
         //リスト
         if (parser_olul.test(str)) {
-          let isblock = buf.currentTag() == 'li';
-          let indent = parser_olul.indent(str);
-          let oldindent = isblock ? parser_olul.indent(PeekPrevLine()) : -1;
+          const isblock = buf.currentTag() == 'li';
+          const indent = parser_olul.indent(str);
+          const oldindent = isblock ? parser_olul.indent(PeekPrevLine()) : -1;
           if (indent - oldindent > 1) {
             //noproc
           } else {
             if (!isblock) buf.popAll();
 
-            let tag = parser_olul.tag(str);
-            let txt = parser_olul.text(str);
+            const tag = parser_olul.tag(str);
+            const txt = parser_olul.text(str);
             if (oldindent < indent) {
               buf.push(tag);
               buf.push('li', txt);
@@ -72,7 +72,7 @@ export class MDParser {
         //テーブル
         if (parser_table.test(str, PeekNextLine())) {
           //先に--部解析
-          let aligns = [];
+          const aligns = [];
           parser_table.texts(NextLine()).forEach(function (x) {
             aligns.push(parser_table.align(x));
           });
@@ -82,7 +82,7 @@ export class MDParser {
           buf.push('thead');
           buf.push('tr');
           parser_table.texts(str).forEach(function (x, i) {
-            let style = "style='text-align:" + aligns[i] + ";'";
+            const style = "style='text-align:" + aligns[i] + ";'";
             buf.push('th', x, style);
             buf.pop();
           });
@@ -96,7 +96,7 @@ export class MDParser {
             buf.push('tr');
             parser_table.texts(NextLine()).forEach(function (x, i) {
               if (i > aligns.length) return;
-              let style = "style='text-align:" + aligns[i] + ";'";
+              const style = "style='text-align:" + aligns[i] + ";'";
               buf.push('td', x, style);
               buf.pop();
             });
@@ -119,14 +119,14 @@ export class MDParser {
         if (parser_blockquote.test(str)) {
           buf.popAll();
           //終了まで進める
-          let indent = 0;
+          const indent = 0;
           while (true) {
-            let newindent = parser_blockquote.indent(str);
+            const newindent = parser_blockquote.indent(str);
             if (newindent > indent) {
-              for (let i = indent; i < newindent; i++)
+              for (const i = indent; i < newindent; i++)
                 buf.push('blockquote', '');
             } else if (newindent < indent) {
-              for (let i = newindent; i < indent; i++)
+              for (const i = newindent; i < indent; i++)
                 buf.pop('blockquote', '');
             } else {
               buf.add('<br />', true, true);
@@ -147,7 +147,7 @@ export class MDParser {
         }
         //コード
         if (parser_code.test(str)) {
-          let ctype = parser_code.type(str);
+          const ctype = parser_code.type(str);
           if (ctype == 'preview' && me.EnablePreview) {
             //HTML直接表示
             buf.popAll();
@@ -161,7 +161,7 @@ export class MDParser {
             buf.popAll();
             buf.push('pre', '');
             buf.push('code', '', ctype != '' ? "class='" + ctype + "'" : '');
-            let i = 0;
+            const i = 0;
             //終了まで進める
             while (true) {
               str = NextLine();
@@ -198,12 +198,12 @@ export class MDParser {
 
     function NextLine() {
       if (inputs.length <= pointer) return null;
-      let s = inputs[pointer];
+      const s = inputs[pointer];
       pointer++;
       return s;
     }
     function PeekPrevLine() {
-      let p = pointer - 2;
+      const p = pointer - 2;
       if (p < 0) return null;
       return inputs[p];
     }
@@ -217,114 +217,116 @@ export class MDParser {
 
     //----------------------------------------
     //HTML構築オブジェクト
-    let HtmlBuilder = function () {
-      let me = this;
-      this.p = 0;
-      this.tag = [''];
-      this.buf = [''];
-      this.attr = [''];
+    class HtmlBuilder {
+      constructor() {
+        const me = this;
+        this.p = 0;
+        this.tag = [''];
+        this.buf = [''];
+        this.attr = [''];
 
-      this.push = function (tag, str, attr) {
-        if (me.tag.length <= me.p) {
-          me.tag.push(null);
-          me.buf.push(null);
-          me.attr.push(null);
-        }
-        me.p++;
-        me.tag[me.p] = tag;
-        me.buf[me.p] = '';
-        me.attr[me.p] = attr == undefined ? '' : attr;
-        me.add(str);
-      };
-      this.add = function (str, noEscape, noReplace) {
-        if (str === undefined || str === null || str == '') return;
-        if (!noEscape) {
-          escapes.forEach(function (x) {
-            str = str.replace(x[0], x[1]);
-          });
-        }
-        if (!noReplace) {
-          replaces.forEach(function (x) {
-            str = str.replace(x[0], x[1]);
-          });
-        }
-        me.buf[me.p] += str;
-      };
-      this.pop = function () {
-        if (me.p <= 0) return;
-        let ret = me.html(me.tag[me.p], me.buf[me.p], me.attr[me.p]);
-        me.tag[me.p] = null;
-        me.buf[me.p] = null;
-        me.attr[me.p] = null;
-        me.p--;
-        me.buf[me.p] += ret;
-      };
-      this.popAll = function () {
-        while (me.p > 0) me.pop();
-      };
-      this.output = function () {
-        me.popAll();
-        return me.buf[0];
-      };
-      this.html = function (tag, text, attr) {
-        let ret = '<' + tag;
-        if (attr.length > 0) ret += ' ' + attr;
-        ret += '>' + text + '</' + tag + '>';
-        return ret;
-      };
-      this.currentTag = function () {
-        if (me.p < 1) return '';
-        return me.tag[me.p];
-      };
-      let escapes = [
-        [/&/g, '&amp;'],
-        [/\\\\/g, '&#92'],
-        [/\\\(/g, '&#40'],
-        [/\\\)/g, '&#41'],
-        [/\\\*/g, '&#42'],
-        [/\\\[/g, '&#91'],
-        [/\\\]/g, '&#93'],
-        [/\\_/g, '&#95'],
-        [/\\`/g, '&#96'],
-        [/\\~/g, '&#126'],
-        [/>/g, '&gt;'],
-        [/</g, '&lt;'],
-      ];
-      let replaces = [
-        [/\*{2}(.+?)\*{2}/g, '<strong>$1</strong>'],
-        [/ _{2}(.+?)_{2} /g, '<strong>$1</strong>'],
-        [/\*(.+?)\*/g, '<em>$1</em>'],
-        [/ _(.+?)_ /g, '<em>$1</em>'],
-        [/`(.+?)`/g, '<code>$1</code>'],
-        [/~~(.+?)~~/, '<del>$1</del>'],
-        [
-          /!\[(.*?)\]\((.+?)\)/g,
-          "<img src='" + MDParserObject.ImageRoot + "$2' alt='$1' />",
-        ],
-        [/\[(.+?)\]\((.+?)\)/g, "<a href='$2' target='_blank'>$1</a>"],
-      ];
-    };
+        this.push = function (tag, str, attr) {
+          if (me.tag.length <= me.p) {
+            me.tag.push(null);
+            me.buf.push(null);
+            me.attr.push(null);
+          }
+          me.p++;
+          me.tag[me.p] = tag;
+          me.buf[me.p] = '';
+          me.attr[me.p] = attr == undefined ? '' : attr;
+          me.add(str);
+        };
+        this.add = function (str, noEscape, noReplace) {
+          if (str === undefined || str === null || str == '') return;
+          if (!noEscape) {
+            escapes.forEach(function (x) {
+              str = str.replace(x[0], x[1]);
+            });
+          }
+          if (!noReplace) {
+            replaces.forEach(function (x) {
+              str = str.replace(x[0], x[1]);
+            });
+          }
+          me.buf[me.p] += str;
+        };
+        this.pop = function () {
+          if (me.p <= 0) return;
+          const ret = me.html(me.tag[me.p], me.buf[me.p], me.attr[me.p]);
+          me.tag[me.p] = null;
+          me.buf[me.p] = null;
+          me.attr[me.p] = null;
+          me.p--;
+          me.buf[me.p] += ret;
+        };
+        this.popAll = function () {
+          while (me.p > 0) me.pop();
+        };
+        this.output = function () {
+          me.popAll();
+          return me.buf[0];
+        };
+        this.html = function (tag, text, attr) {
+          let ret = '<' + tag + ` class="mdParser mdParser_${tag}"`;
+          if (attr.length > 0) ret += ' ' + attr;
+          ret += '>' + text + '</' + tag + '>';
+          return ret;
+        };
+        this.currentTag = function () {
+          if (me.p < 1) return '';
+          return me.tag[me.p];
+        };
+        const escapes = [
+          [/&/g, '&amp;'],
+          [/\\\\/g, '&#92'],
+          [/\\\(/g, '&#40'],
+          [/\\\)/g, '&#41'],
+          [/\\\*/g, '&#42'],
+          [/\\\[/g, '&#91'],
+          [/\\\]/g, '&#93'],
+          [/\\_/g, '&#95'],
+          [/\\`/g, '&#96'],
+          [/\\~/g, '&#126'],
+          [/>/g, '&gt;'],
+          [/</g, '&lt;'],
+        ];
+        const replaces = [
+          [/\*{2}(.+?)\*{2}/g, '<strong>$1</strong>'],
+          [/ _{2}(.+?)_{2} /g, '<strong>$1</strong>'],
+          [/\*(.+?)\*/g, '<em>$1</em>'],
+          [/ _(.+?)_ /g, '<em>$1</em>'],
+          [/`(.+?)`/g, '<code>$1</code>'],
+          [/~~(.+?)~~/, '<del>$1</del>'],
+          [
+            /!\[(.*?)\]\((.+?)\)/g,
+            "<img src='" + MDParserObject.ImageRoot + "$2' alt='$1' />",
+          ],
+          [/\[(.+?)\]\((.+?)\)/g, "<a href='$2' target='_blank'>$1</a>"],
+        ];
+      }
+    }
 
     //----------------------------------------
     //パーサ群
-    let parser_h = new (function () {
-      let regex = /^#+ +/;
+    const parser_h = new (function () {
+      const regex = /^#+ +/;
 
       this.test = function (str) {
         return regex.test(str);
       };
       this.tag = function (str) {
-        let h = str.match(regex)[0];
+        const h = str.match(regex)[0];
         return 'h' + ('' + h).indexOf(' ');
       };
       this.text = function (str) {
         return str.replace(regex, '');
       };
     })();
-    let parser_olul = new (function () {
-      let regex = /^\s*([-*+]|[1-9]\.) +/;
-      let regexUl = /^\s*[-*+] +/;
-      let regexOl = /^\s*[1-9]\. +/;
+    const parser_olul = new (function () {
+      const regex = /^\s*([-*+]|[1-9]\.) +/;
+      const regexUl = /^\s*[-*+] +/;
+      const regexOl = /^\s*[1-9]\. +/;
 
       this.test = function (str) {
         return regex.test(str);
@@ -338,20 +340,20 @@ export class MDParser {
         return str.replace(regex, '');
       };
       this.indent = function (str) {
-        let indent = str.match(/^\s*/)[0].replace(/\t/, '    ');
+        const indent = str.match(/^\s*/)[0].replace(/\t/, '    ');
         return Math.floor(indent.length / 4);
       };
     })();
-    let parser_hr = new (function () {
-      let regex = /^\s*((- *){3,}|(\* *){3,})\s*$/;
+    const parser_hr = new (function () {
+      const regex = /^\s*((- *){3,}|(\* *){3,})\s*$/;
       this.test = function (str) {
         return regex.test(str);
       };
     })();
-    let parser_table = new (function () {
-      let me = this;
-      let regex1 = /^\s*\|.*\|\s*$/;
-      let regex2 = /^\s*(\|\s*:?-+:?\s*)+\|\s*$/;
+    const parser_table = new (function () {
+      const me = this;
+      const regex1 = /^\s*\|.*\|\s*$/;
+      const regex2 = /^\s*(\|\s*:?-+:?\s*)+\|\s*$/;
 
       this.test = function (str1, str2) {
         if (str2 == undefined) {
@@ -363,20 +365,20 @@ export class MDParser {
         }
       };
       this.texts = function (str) {
-        let spl = str.split('|');
+        const spl = str.split('|');
         return spl.slice(1, spl.length - 1);
       };
       this.align = function (str) {
-        let st = /:-+/.test(str);
-        let ed = /-+:/.test(str);
+        const st = /:-+/.test(str);
+        const ed = /-+:/.test(str);
         if (st && !ed) return 'left';
         if (!st && ed) return 'right';
         if (st && ed) return 'center';
         return 'initial';
       };
     })();
-    let parser_pre = new (function () {
-      let regex = /^( {4,}|\t)/;
+    const parser_pre = new (function () {
+      const regex = /^( {4,}|\t)/;
       this.test = function (str) {
         return regex.test(str);
       };
@@ -387,8 +389,8 @@ export class MDParser {
         return str.replace(regex, '');
       };
     })();
-    let parser_blockquote = new (function () {
-      let regex = /^\s*(>+) */;
+    const parser_blockquote = new (function () {
+      const regex = /^\s*(>+) */;
       this.test = function (str) {
         return regex.test(str);
       };
@@ -399,8 +401,8 @@ export class MDParser {
         return str.replace(regex, '');
       };
     })();
-    let parser_code = new (function () {
-      let regex = /^\s*`{3,}\s*/;
+    const parser_code = new (function () {
+      const regex = /^\s*`{3,}\s*/;
       this.test = function (str) {
         return regex.test(str);
       };
@@ -408,9 +410,9 @@ export class MDParser {
         return str.replace(regex, '');
       };
     })();
-    let parser_comment = new (function () {
-      let regexS = /^\s*<!-{2,}\s*/;
-      let regexE = /^\s*-{2,}>\s*/;
+    const parser_comment = new (function () {
+      const regexS = /^\s*<!-{2,}\s*/;
+      const regexE = /^\s*-{2,}>\s*/;
       this.test = function (str) {
         return regexS.test(str);
       };

@@ -1,61 +1,11 @@
 import { MDParser } from './modules/mdParser.js';
 import { hiraFuda } from './yomifuda.js';
 
-const mdText = `
-# ほげ
-
-ふがふが
-
-- ぴよ
-  - みよ
-- がお
-
-## h2だとー
-
-この
-
-改行
-はどう
-かな
-
-`;
-
-const paser = new MDParser();
-const htmlMD = paser.BuildHtml(mdText);
-console.log(htmlMD);
-
-const divWrap = document.createElement('div');
-divWrap.innerHTML = htmlMD;
-// document.body.appendChild(divWrap);
+const parser = new MDParser();
 
 /**
- * DOM
+ * DOM func
  */
-
-const h1Header = document.createElement('h1');
-h1Header.textContent = 'ずんだもん 百人一首 なのだ';
-h1Header.style.margin = '1rem 0';
-
-const readLine01 = document.createElement('p');
-readLine01.style.fontSize = '0.8rem';
-readLine01.textContent =
-  'ずんだもんが百人一首を読むのだ。発音やイントネーションが違うかもしれないのだ。ゆるしてほしいのだ。';
-
-const readLine02 = document.createElement('p');
-readLine02.style.fontSize = '0.64rem';
-readLine02.textContent = '諸事情でスマホサイズに最適化しているのだ。';
-
-/** 百人一首選択エリア */
-const inputText = document.createElement('input');
-inputText.setAttribute('type', 'search');
-inputText.setAttribute('placeholder', '1, 2, 12, 43');
-inputText.style.width = '100%';
-inputText.style.background = '#86C16680';
-
-const buttonWrap = document.createElement('div');
-buttonWrap.style.margin = '1rem 0';
-buttonWrap.style.display = 'flex';
-buttonWrap.style.justifyContent = 'space-between';
 
 const create_button = (width, ...textContents) => {
   const btns = textContents.map((text) => {
@@ -69,41 +19,6 @@ const create_button = (width, ...textContents) => {
   });
   return btns;
 };
-
-const btnTexts = ['入力された順番に読むのだ', 'ランダムな順番で読むのだ'];
-
-const [sortOrderBtn, randomOrderBtn] = create_button('45%', ...btnTexts);
-
-/** 使い方エリア */
-const h2Header = document.createElement('h2');
-h2Header.textContent = '使い方なのだ';
-
-const ulTag = document.createElement('ul');
-const liTexts = [
-  '読んでほしい歌番号を数字で入力するのだ。',
-  'たくさんあるなら「,」で区切るのだ。',
-  '全部読むなら何も入力しなくていいのだ。',
-  '読み込みに少し時間がかかるのだ。',
-  '声が出ない場合はリロードして欲しいのだ。',
-  '下の検索エリアで探することもできるのだ。',
-];
-
-/**　説明箇条書き */
-const create_liTags = (...textContents) => {
-  const liTags = textContents.map((text) => {
-    const li = document.createElement('li');
-    li.textContent = text;
-    return li;
-  });
-  return liTags;
-};
-
-/** 箇条書きはガッちゃんこ */
-const set_ul_li = (ul, lis) => lis.forEach((li) => ul.appendChild(li));
-set_ul_li(ulTag, create_liTags(...liTexts));
-
-buttonWrap.appendChild(sortOrderBtn);
-buttonWrap.appendChild(randomOrderBtn);
 
 /** テーブル作成 */
 const create_table = (...utas) => {
@@ -166,27 +81,118 @@ const create_table = (...utas) => {
   return tbl;
 };
 
+/**
+ * DOM
+ */
+
+const topLineText = `
+# ずんだもん 百人一首 なのだ
+
+ずんだんもが百人一首をよむのだ。発音やイントネーションが違うかもしれないのだ。ゆるしてほしいのだ。
+
+諸事情でスマホサイズに最適化しているのだ。
+`;
+
+const topLineDiv = document.createElement('div');
+topLineDiv.innerHTML = parser.BuildHtml(topLineText);
+document.body.appendChild(topLineDiv);
+
+topLineDiv.childNodes.forEach((node, index) => {
+  const tagName = node.localName;
+  if (tagName === 'h1') {
+    node.style.margin = '1rem 0';
+  }
+  if (tagName === 'p') {
+    node.style.fontSize = '0.8rem';
+  }
+  if (topLineDiv.childNodes.length - 1 === index) {
+    node.style.fontSize = '0.64rem';
+  }
+});
+
+/** 百人一首選択エリア */
+const inputText = document.createElement('input');
+inputText.setAttribute('type', 'search');
+inputText.setAttribute('placeholder', '1, 2, 12, 43');
+inputText.style.width = '100%';
+inputText.style.background = '#86C16680';
+
+const buttonWrap = document.createElement('div');
+buttonWrap.style.margin = '1rem 0';
+buttonWrap.style.display = 'flex';
+buttonWrap.style.justifyContent = 'space-between';
+
+const btnTexts = ['入力された順番に読むのだ', 'ランダムな順番で読むのだ'];
+
+const [sortOrderBtn, randomOrderBtn] = create_button('45%', ...btnTexts);
+
+document.body.appendChild(inputText);
+
+buttonWrap.appendChild(sortOrderBtn);
+buttonWrap.appendChild(randomOrderBtn);
+document.body.appendChild(buttonWrap);
+
+/** 使い方エリア */
+
+const howtoUseDiv = document.createElement('div');
+const howtoUseText = `
+## 使い方なのだ
+
+- よんでほしい歌番号を数字で入れるのだ
+- たくさんあるなら「,」 で区切るのだ
+- 全部よむなら何も入力しなくていいのだ
+    - 読み込みに時間かかるのですこし待つのだ
+- 変だと思ったらリロードしてほしいのだ
+- 下の検索から歌をさがせるのだ
+`;
+howtoUseDiv.innerHTML = parser.BuildHtml(howtoUseText);
+document.body.appendChild(howtoUseDiv);
+
+/** 札テーブル */
+const fudaTable = create_table(...hiraFuda);
+document.body.appendChild(fudaTable);
+
 /**　メモ書き */
+const memoText = `
+### 📝 todo なのだ
 
-const memo = document.createElement('h3');
-memo.textContent = '📝 todo なのだ';
+エラーや改善イメージなど、とりあえず宣言するところなのだ
 
-const memoParagraph = document.createElement('p');
-memoParagraph.style.fontSize = '0.8rem';
+#### エラーや不備
 
-memoParagraph.textContent =
-  'エラーや改善イメージなど、とりあえず書き落とすところなのだ。';
+- 読み込みに失敗すると、音声再生不能
+- 同じ番号を入力した場合、読み込み不可
+- チェックボックスとinput area がバラバラ
+- 音声データの読み込みが遅い
 
-const errorRec = document.createElement('h4');
-errorRec.textContent = 'エラーや不備';
 
-//document.body.appendChild(errorRec);
+#### 改善やtodo
+
+- 音声データを取得して一つのバッファーとして音声出力をしている
+    - PC とスマホで再生できる、もっとスマートな再生方法
+- 歌チェックと、input area との連動
+    - 同番号の複数入力の処理をどうするか
+        - input area
+        - 音声出力
+- どこまでjs でコネコネするか
+
+`;
+const memoDiv = document.createElement('div');
+memoDiv.innerHTML = parser.BuildHtml(memoText);
+document.body.appendChild(memoDiv);
+
+memoDiv.childNodes.forEach((node) => {
+  const tagName = node.localName;
+  if (tagName === 'p' || tagName === 'ul') {
+    node.style.fontSize = '0.8rem';
+  }
+});
 
 const marginBuffer = document.createElement('div');
 marginBuffer.style.width = '100%';
 marginBuffer.style.height = '8rem';
 
-const fudaTable = create_table(...hiraFuda);
+document.body.appendChild(marginBuffer);
 
 /** フッターと検索エリア */
 const footerTag = document.createElement('footer');
@@ -245,25 +251,6 @@ credit.appendChild(aTag);
 
 footerTag.appendChild(searchArea);
 footerTag.appendChild(credit);
-
-/** append まつり */
-
-document.body.appendChild(h1Header);
-document.body.appendChild(readLine01);
-document.body.appendChild(readLine02);
-
-document.body.appendChild(inputText);
-document.body.appendChild(buttonWrap);
-
-document.body.appendChild(h2Header);
-document.body.appendChild(ulTag);
-
-document.body.appendChild(fudaTable);
-
-document.body.appendChild(memo);
-document.body.appendChild(memoParagraph);
-
-document.body.appendChild(marginBuffer);
 
 document.body.appendChild(footerTag);
 
