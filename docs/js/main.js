@@ -1,4 +1,32 @@
+import { MDParser } from './modules/mdParser.js';
 import { hiraFuda } from './yomifuda.js';
+
+const mdText = `
+# ほげ
+
+ふがふが
+
+- ぴよ
+  - みよ
+- がお
+
+## h2だとー
+
+この
+
+改行
+はどう
+かな
+
+`;
+
+const paser = new MDParser();
+const htmlMD = paser.BuildHtml(mdText);
+console.log(htmlMD);
+
+const divWrap = document.createElement('div');
+divWrap.innerHTML = htmlMD;
+document.body.appendChild(divWrap);
 
 /**
  * DOM
@@ -138,7 +166,6 @@ const create_table = (...utas) => {
   return tbl;
 };
 
-
 /**　メモ書き */
 
 const memo = document.createElement('h3');
@@ -147,20 +174,13 @@ memo.textContent = '📝 todo なのだ';
 const memoParagraph = document.createElement('p');
 memoParagraph.style.fontSize = '0.8rem';
 
-memoParagraph.textContent = 'エラーや改善イメージなど、とりあえず書き落とすところなのだ。'
-
+memoParagraph.textContent =
+  'エラーや改善イメージなど、とりあえず書き落とすところなのだ。';
 
 const errorRec = document.createElement('h4');
-errorRec.textContent = 'エラーや不備'
-
-
-
-
-
-
+errorRec.textContent = 'エラーや不備';
 
 //document.body.appendChild(errorRec);
-
 
 const marginBuffer = document.createElement('div');
 marginBuffer.style.width = '100%';
@@ -244,7 +264,6 @@ document.body.appendChild(memo);
 document.body.appendChild(memoParagraph);
 
 document.body.appendChild(marginBuffer);
-
 
 document.body.appendChild(footerTag);
 
