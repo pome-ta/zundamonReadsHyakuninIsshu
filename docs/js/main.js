@@ -140,7 +140,7 @@ const howtoUseText = `
 - 全部よむなら何も入力しなくていいのだ
     - 読み込みに時間かかるのですこし待つのだ
 - 変だと思ったらリロードしてほしいのだ
-- 下の検索から歌をさがせるのだ
+- 下の検索バーから歌をさがせるのだ
 `;
 howtoUseDiv.innerHTML = parser.BuildHtml(howtoUseText);
 document.body.appendChild(howtoUseDiv);
@@ -173,6 +173,7 @@ const memoText = `
     - 同番号の複数入力の処理をどうするか
         - input area
         - 音声出力
+- フッターエリアがスクロールバーでガタつく
 - どこまでjs でコネコネするか
 
 `;
