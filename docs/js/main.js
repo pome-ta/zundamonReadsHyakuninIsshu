@@ -34,10 +34,12 @@ const create_table = (...utas) => {
     const tr = document.createElement('tr');
     tr.style.height = '2rem';
     tr.style.fontSize = '0.64rem';
+    
+    const content = `${index + 1}`;
 
     const numText = document.createElement('span');
     numText.style.verticalAlign = 'top';
-    numText.textContent = `${index + 1}`;
+    numText.textContent = content
 
     const labelNum = document.createElement('label');
     labelNum.appendChild(numText);
@@ -47,15 +49,10 @@ const create_table = (...utas) => {
     tdNum.style.textAlign = 'right';
     tdNum.appendChild(labelNum);
 
-    const tdBar = document.createElement('td');
-    tdBar.style.textAlign = 'center';
-    tdBar.style.width = '0.8rem';
-    tdBar.textContent = '|';
-
     const checkBox = document.createElement('input');
     checkBox.setAttribute('type', 'checkbox');
     checkBox.setAttribute('name', 'num');
-    checkBox.setAttribute('value', `${index + 1}`);
+    checkBox.setAttribute('value', content);
     checkBox.style.width = '0.5rem';
     checkBox.style.height = '0.5rem';
     checkBox.style.margin = '0.5rem 0.25rem';
