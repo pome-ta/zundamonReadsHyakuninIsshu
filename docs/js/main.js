@@ -14,6 +14,7 @@ async function getMP3URL(uri) {
 
 
 const dataURI = './media/mp3/001.mp3'
+const dataURI2 = './media/mp3/002.mp3'
 
 
 
@@ -56,6 +57,13 @@ playDiv.style.background = 'red';
 playDiv.style.margin = '1rem auto';
 document.body.appendChild(playDiv);
 
+const playDiv2 = document.createElement('div');
+playDiv2.style.width = '10rem';
+playDiv2.style.height = '8rem';
+// playDiv.textContent = '再生';
+playDiv2.style.background = 'blue';
+playDiv2.style.margin = '1rem auto';
+document.body.appendChild(playDiv2);
 
 
 
@@ -65,6 +73,18 @@ playDiv.addEventListener('touchend', async (event) => {
   event.preventDefault();
   console.log('きた');
   const dataURL = await getMP3URL(dataURI)
+  const audio_element = document.createElement('audio');
+  const audioMP3 = new Audio(dataURL);
+  
+  audioMP3.play();
+});
+
+
+playDiv2.addEventListener('touchend', async (event) => {
+//playDiv.addEventListener('click', (event) => {
+  event.preventDefault();
+  console.log('きた');
+  const dataURL = await getMP3URL(dataURI2)
   const audio_element = document.createElement('audio');
   const audioMP3 = new Audio(dataURL);
   
