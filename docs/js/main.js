@@ -1,82 +1,8 @@
 import { MDParser } from './modules/mdParser.js';
+import { create_buttons, create_table } from './setUpDOMs.js';
 import { hiraFuda } from './yomifuda.js';
 
 const parser = new MDParser();
-
-/**
- * DOM func
- */
-
-const create_button = (width, ...textContents) => {
-  const btns = textContents.map((text) => {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.style.width = width;
-    btn.style.height = '4rem';
-    btn.style.fontSize = '0.72rem';
-    btn.textContent = text;
-    return btn;
-  });
-  return btns;
-};
-
-/** テーブル作成 */
-const create_table = (...utas) => {
-  const tbl = document.createElement('table');
-  tbl.classList.add('order-table');
-  tbl.style.width = '100%';
-  tbl.style.margin = '1rem 0';
-
-  const tb = document.createElement('tbody');
-  tbl.appendChild(tb);
-
-  utas.forEach((uta, index) => {
-    const tr = document.createElement('tr');
-    tr.style.height = '2rem';
-    tr.style.fontSize = '0.64rem';
-    
-    const content = `${index + 1}`;
-
-    const numText = document.createElement('span');
-    numText.style.verticalAlign = 'top';
-    numText.textContent = content
-
-    const labelNum = document.createElement('label');
-    labelNum.appendChild(numText);
-
-    const tdNum = document.createElement('td');
-    tdNum.style.width = '1.2rem';
-    tdNum.style.textAlign = 'right';
-    tdNum.appendChild(labelNum);
-
-    const checkBox = document.createElement('input');
-    checkBox.setAttribute('type', 'checkbox');
-    checkBox.setAttribute('name', 'num');
-    checkBox.setAttribute('value', content);
-    checkBox.style.width = '0.5rem';
-    checkBox.style.height = '0.5rem';
-    checkBox.style.margin = '0.5rem 0.25rem';
-    checkBox.addEventListener('change', getCheckValue);
-
-    const utaText = document.createElement('span');
-    utaText.textContent = uta;
-
-    const labelCheck = document.createElement('label');
-    labelCheck.style.cursor = 'pointer';
-    labelCheck.appendChild(checkBox);
-    labelCheck.appendChild(utaText);
-
-    const tdUtaCheck = document.createElement('td');
-    tdUtaCheck.style.margin = '0 1rem';
-    tdUtaCheck.appendChild(labelCheck);
-
-    tr.appendChild(tdNum);
-    tr.appendChild(tdUtaCheck);
-    tb.appendChild(tr);
-  });
-
-  return tbl;
-};
 
 /**
  * DOM
@@ -107,6 +33,23 @@ topLineDiv.childNodes.forEach((node, index) => {
   }
 });
 
+const playDiv = document.createElement('div');
+playDiv.style.width = '10rem';
+playDiv.style.height = '8rem';
+// playDiv.textContent = '再生';
+playDiv.style.background = 'red';
+playDiv.style.margin = '1rem auto';
+document.body.appendChild(playDiv);
+
+const audioMP3 = new Audio('../media/mp3/001.mp3');
+
+// playDiv.addEventListener('touchend', (event) => {
+playDiv.addEventListener('click', (event) => {
+  event.preventDefault();
+  console.log('きた');
+  audioMP3.play();
+});
+
 /** 百人一首選択エリア */
 const inputText = document.createElement('input');
 inputText.setAttribute('type', 'search');
@@ -121,7 +64,7 @@ buttonWrap.style.justifyContent = 'space-between';
 
 const btnTexts = ['入力された順番に読むのだ', 'ランダムな順番で読むのだ'];
 
-const [sortOrderBtn, randomOrderBtn] = create_button('45%', ...btnTexts);
+const [sortOrderBtn, randomOrderBtn] = create_buttons('45%', ...btnTexts);
 
 document.body.appendChild(inputText);
 
@@ -254,19 +197,7 @@ footerTag.appendChild(credit);
 
 document.body.appendChild(footerTag);
 
-/**
- * select event
- */
-
 let selectArray = new Array();
-
-function getCheckValue(event) {
-  const box = event.target;
-  if (box.checked) {
-    const value = `${box.value}, `;
-    inputText.value += value;
-  }
-}
 
 /**
  * audio

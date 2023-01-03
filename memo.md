@@ -1,3 +1,7 @@
+# 📝 2023/01/03
+
+[iOSのMobile Safari でWeb Audio API を利用したサウンドが再生されない (タッチ制約による制限) : JavaScript | iPentec](https://www.ipentec.com/document/software-mobile-safari-ios-web-audio-api-touch-limit)
+
 # 📝 2023/01/02
 
 ## 音源の鳴らし方
