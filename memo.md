@@ -2,6 +2,16 @@
 
 [iOSのMobile Safari でWeb Audio API を利用したサウンドが再生されない (タッチ制約による制限) : JavaScript | iPentec](https://www.ipentec.com/document/software-mobile-safari-ios-web-audio-api-touch-limit)
 
+
+
+[Web Audio APIとFetch APIで音を鳴らすスニペット - Augmented Usamimi](https://izumin.hateblo.jp/entry/2016/11/23/124925)
+
+
+[[HTML5] 音声ファイルの事前ダウンロード - audioタグ編](https://blog.katsubemakito.net/html5/audio2)
+
+[Fetch APIでファイルを読み込む | GRAYCODE JavaScript](https://gray-code.com/javascript/load-file-with-fetch-api/)
+
+
 # 📝 2023/01/02
 
 ## 音源の鳴らし方
