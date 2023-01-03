@@ -5,16 +5,17 @@ import { hiraFuda } from './yomifuda.js';
 const parser = new MDParser();
 
 
-async function getMP3(uri) {
+async function getMP3URL(uri) {
   const res = await fetch(uri);
-  const blob = await res.blob()
-  return blob
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob)
+  return url
 }
 
 
 const dataURI = './media/mp3/001.mp3'
-let mp3data = getMP3(dataURI)
-console.log(mp3data)
+
+
 
 
 
@@ -57,12 +58,15 @@ document.body.appendChild(playDiv);
 
 
 
-const audioMP3 = new Audio('../media/mp3/001.mp3');
 
-playDiv.addEventListener('touchend', (event) => {
+
+playDiv.addEventListener('touchend', async (event) => {
 //playDiv.addEventListener('click', (event) => {
   event.preventDefault();
   console.log('きた');
+  const dataURL = await getMP3URL(dataURI)
+  const audio_element = document.createElement('audio');
+  const audioMP3 = new Audio(dataURL);
   
   audioMP3.play();
 });
