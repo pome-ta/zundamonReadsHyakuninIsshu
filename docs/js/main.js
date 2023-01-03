@@ -4,21 +4,15 @@ import { hiraFuda } from './yomifuda.js';
 
 const parser = new MDParser();
 
-
 async function getMP3URL(uri) {
   const res = await fetch(uri);
   const blob = await res.blob();
-  const url = URL.createObjectURL(blob)
-  return url
+  const url = URL.createObjectURL(blob);
+  return url;
 }
 
-
-const dataURI = './media/mp3/001.mp3'
-const dataURI2 = './media/mp3/002.mp3'
-
-
-
-
+const dataURI = './media/mp3/001.mp3';
+const dataURI2 = './media/mp3/002.mp3';
 
 /**
  * DOM
@@ -65,29 +59,25 @@ playDiv2.style.background = 'blue';
 playDiv2.style.margin = '1rem auto';
 document.body.appendChild(playDiv2);
 
-
-
-
 playDiv.addEventListener('touchend', async (event) => {
-//playDiv.addEventListener('click', (event) => {
+  //playDiv.addEventListener('click', (event) => {
   event.preventDefault();
   console.log('きた');
-  const dataURL = await getMP3URL(dataURI)
+  const dataURL = await getMP3URL(dataURI);
   const audio_element = document.createElement('audio');
   const audioMP3 = new Audio(dataURL);
-  
+
   audioMP3.play();
 });
 
-
 playDiv2.addEventListener('touchend', async (event) => {
-//playDiv.addEventListener('click', (event) => {
+  //playDiv.addEventListener('click', (event) => {
   event.preventDefault();
   console.log('きた');
-  const dataURL = await getMP3URL(dataURI2)
+  const dataURL = await getMP3URL(dataURI2);
   const audio_element = document.createElement('audio');
   const audioMP3 = new Audio(dataURL);
-  
+
   audioMP3.play();
 });
 
