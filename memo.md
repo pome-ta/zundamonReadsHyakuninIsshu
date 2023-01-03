@@ -15,6 +15,14 @@
 [Fetch APIでファイルを読み込む | GRAYCODE JavaScript](https://gray-code.com/javascript/load-file-with-fetch-api/)
 
 
+### 無理やり鳴ったかな？
+
+Pythonista3 のローカルでは、取得できてないけどネットワーク上であれば鳴る
+
+
+タップを一度噛ませないといけない
+
+
 ## UI デザイン
 
 [【翻訳】SpotifyとApple MusicをUX視点で比較してみる｜designing](https://note.designing.jp/n/n52d853262e1a)
