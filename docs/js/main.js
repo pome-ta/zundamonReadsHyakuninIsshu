@@ -46,19 +46,20 @@ topLineDiv.childNodes.forEach((node, index) => {
 const playDiv = document.createElement('div');
 playDiv.style.width = '10rem';
 playDiv.style.height = '8rem';
-// playDiv.textContent = '再生';
+playDiv.textContent = '再生';
 playDiv.style.background = 'red';
 playDiv.style.margin = '1rem auto';
-document.body.appendChild(playDiv);
+//document.body.appendChild(playDiv);
 
 const playDiv2 = document.createElement('div');
 playDiv2.style.width = '10rem';
 playDiv2.style.height = '8rem';
-// playDiv.textContent = '再生';
+playDiv.textContent = '再生';
 playDiv2.style.background = 'blue';
 playDiv2.style.margin = '1rem auto';
-document.body.appendChild(playDiv2);
+//document.body.appendChild(playDiv2);
 
+// xxx: テスト用
 playDiv.addEventListener('touchend', async (event) => {
   //playDiv.addEventListener('click', (event) => {
   event.preventDefault();
@@ -149,6 +150,7 @@ const memoText = `
         - 音声出力
 - フッターエリアがスクロールバーでガタつく
 - どこまでjs でコネコネするか
+    - \`sortOrderBtn\` と\`randomOrderBtn\` ほぼ同じ処理書いてる、、、
 
 `;
 const memoDiv = document.createElement('div');
