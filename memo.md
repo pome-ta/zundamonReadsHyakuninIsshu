@@ -1,3 +1,13 @@
+# 📝 2023/12/14
+
+データ探し
+
+
+[hyakunin.json](https://gist.github.com/wakaba/8363dc27f4c54f76b4a7/#comment-1184092)
+
+[GitHub - nyoronjp/Ogura_Hyakunin_Isshu.csv: 百人一首のCSVファイルです。](https://github.com/nyoronjp/Ogura_Hyakunin_Isshu.csv)
+
+
 # 📝 2023/01/03
 
 スマホのタップだけに対応している
